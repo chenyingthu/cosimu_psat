@@ -1,4 +1,5 @@
-function fm_spf
+function fm_spf_modified( Config )
+
 % FM_SPF solve standard power flow by means of the NR method
 %       and fast decoupled power flow (XB and BX variations)
 %       with either a single or distributed slack bus model.
@@ -369,6 +370,10 @@ end
 adjgen(PQ)
 
 
+if Config.simuType == 0
+    return;
+end
+
 % memory allocation for dynamic variables & state variables indicization
 if nodyn == 1; DAE.x = []; DAE.f = []; DAE.n = 0; end
 DAE.npf = DAE.n;
@@ -506,3 +511,4 @@ else % single slack bus
   inc = -[DAE.Fx, DAE.Fy; DAE.Gx, DAE.Gy]\[DAE.f; DAE.g];
 
 end
+

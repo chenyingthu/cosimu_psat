@@ -19,16 +19,16 @@ end
 
 % %% run state estimation
 % % flat start
-% if Config.seEnable == 1
-%     [baseMVA, bus, gen, branch, se_success] = StateEstimate(ResultData, CurrentStatus);
-%     if se_success == 1
-%         CurrentStatus.bus = bus;
-%         CurrentStatus.branch = branch;
-%         CurrentStatus.gen = gen;
-%     else
-%         disp(['t = ', num2str(ResultData.t(end)),' >>>>>>>>>>>>>>>> se failed']);
-%     end
-% end
+if Config.seEnable == 1
+    [baseMVA, bus, gen, branch, se_success] = stateEstimate(ResultData, CurrentStatus);
+    if se_success == 1
+        CurrentStatus.bus = bus;
+        CurrentStatus.branch = branch;
+        CurrentStatus.gen = gen;
+    else
+        disp(['t = ', num2str(ResultData.t(end)),' >>>>>>>>>>>>>>>> se failed']);
+    end
+end
 
 
 %% run opf

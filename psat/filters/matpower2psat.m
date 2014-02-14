@@ -32,7 +32,7 @@ pathname = [pathname,filesep];
 fm_disp
 fm_disp('Conversion from Matpower Data Format ...');
 fm_disp(['Source data file "',pathname,filename,'"'])
-
+version = [];
 baseMVA = [];
 bus = [];
 gen = [];
@@ -42,7 +42,12 @@ gencost = [];
 
 try
   cd(pathname)
-  [baseMVA, bus, gen, branch, area, gencost] = feval(filename(1:end-2));
+  mpc = feval(filename(1:end-2));
+  baseMVA = mpc.baseMVA;
+  bus = mpc. bus;
+  gen = mpc.gen;
+  branch = mpc.branch;
+  gencost = mpc.gencost;
   cd(Path.local)
 catch
   fm_disp(['Something wrong with the file ',pathname,filename])
@@ -162,9 +167,9 @@ end
 % Constant Power Load data: PQ.con
 % ----------------------------------------------------------------------
 
-k1 = find(bus(:,3) ~= 0 || bus(:,4) ~= 0);
+k1 = find(bus(:,3) ~= 0 | bus(:,4) ~= 0);
 % for buses without generators or loads, the Vmin/Vmax must be kept.
-k2 = find(bus(:,3) == 0 && bus(:,4) == 0  && bus(:,2) == 1);
+k2 = find(bus(:,3) == 0 & bus(:,4) == 0  & bus(:,2) == 1);
 count = fprintf(fid, 'PQ.con = [ ...\n');
 format = ['%4d ',num2str(baseMVA),repmat(' %8.4g',1,5),' 0 1;\n'];
 count = fprintf(fid,format,bus([k1;k2],[1,10,3,4,12,13])');
@@ -173,7 +178,7 @@ count = fprintf(fid,'   ];\n\n');
 % Shunt Impedance data: Shunt.con
 % ----------------------------------------------------------------------
 
-k = find(bus(:,5) || bus(:,6));
+k = find(bus(:,5) | bus(:,6));
 if ~isempty(k)
   count = fprintf(fid, 'Shunt.con = [ ...\n');
   format = ['%4d ',num2str(baseMVA),' %8.4g 60 %8.4g %8.4g 1;\n'];
@@ -199,8 +204,8 @@ if ~isempty(branch)
   Line_con(:,[1 2 5 6 7 8 9 10 11 12 13]) = ...
       branch(:,[1 2 3 4 5 9 10 6 7 8 11]);
   count = fprintf(fid, 'Line.con = [ ...\n');
-  format = ['%4d %4d ',num2str(baseMVA),' %8.4g 60 0 ', ...
-            repmat(' %8.4g',1,9), ' %2u;\n'];
+  format = ['%4d %4d ',num2str(baseMVA),' %8.5g 60 0 ', ...
+            repmat(' %8.5g',1,9), ' %2u;\n'];
   count = fprintf(fid,format,Line_con');
   count = fprintf(fid,'   ];\n\n');
 end
@@ -248,7 +253,7 @@ if ~isempty(gencost)
     coeff(h(i),:) = a;
   end
   h = find(gencost(:,1) == 2);
-  if h && ~isempty(find(gencost(h,4) > 3)),
+  if h & ~isempty(find(gencost(h,4) > 3)),
     fm_disp('Polynomial generator costs are reduced to 2nd order polynomials.'),
   end
   for i = 1:length(h)

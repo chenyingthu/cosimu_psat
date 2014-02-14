@@ -41,7 +41,7 @@ while (t < Settings.tf)
         PQ.con(:, [4, 5]) = loadshape(nPointOfLoadShape) * ResultData.loadBase;
     end
     
-    fm_spf;
+    fm_spf_modified(Config);
    
     
     %% sampling all real history records from PSAT

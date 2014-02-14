@@ -221,3 +221,7 @@ pip-log.txt
 /*.asv
 
 /loadshape/*.mat
+
+/psat/tests/*.asv
+
+/psat/tests/*.asv

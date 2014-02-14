@@ -38,6 +38,15 @@ Line.con = [ ...
   8  7  100  18  60  0  1.304348  0  0.17615  0  0  0  0  0  0  1;
  ];
 
+for i = 1 : length(Line.con(:,1))
+    if Line.con(i, 1) > Line.con(i, 2)
+        tmp = Line.con(i, 1);
+        Line.con(i, 1) = Line.con(i, 2);
+        Line.con(i, 2) = tmp;
+    end
+end
+Line.con = sortrows(Line.con, 1);
+
 % Breaker.con = [ ... 
 %   16  2  100  69  60  0  100  200;
 %  ];

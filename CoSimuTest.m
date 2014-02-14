@@ -5,17 +5,20 @@ clear ;
 
 addpath([pwd, '\coSimu']);
 addpath([pwd, '\psat']);
+addpath([pwd, '\psat\filters']);
 addpath([pwd, '\matpower4.1']);
-addpath([pwd, '\matpower4.1\extras/se']);
+addpath([pwd, '\matpower4.1\extras\se']);
 addpath([pwd, '\debug']);
 addpath([pwd, '\loadshape']);
 pwdpath = pwd;
 
-
-
 Config = initialConfig;
 
-cd([pwd, '\loadshape']);
+if Config.simuType == 0
+    cd([pwd, '\loadshape\lf']);
+else
+    cd([pwd, '\loadshape\dyn']);
+end
 delete *.mat
 createhourloadshape(Config);
 

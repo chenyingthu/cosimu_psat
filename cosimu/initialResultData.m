@@ -53,3 +53,24 @@ for iGen = 1 : length(synIdx)
     idx = find(CurrentStatus.gen(:,1) == synIdx(iGen));
     ResultData.allGenIdx = [ResultData.allGenIdx; idx];
 end
+
+ResultData.allLineIdx = [];
+ResultData.allLineHeadBusIdx = [];
+ResultData.allLineTailBusIdx = [];
+
+for iLine = 1 : Line.n            
+    fromBus = Line.con(iLine, 1);
+    endBus = Line.con(iLine, 2);
+    idx = find(CurrentStatus.branch(:,1)==fromBus & CurrentStatus.branch(:,2) == endBus);
+    if isempty(idx)
+        idx = find(CurrentStatus.branch(:,1)==endBus & CurrentStatus.branch(:,2) == fromBus);
+    end
+    ResultData.allLineIdx = [ResultData.allLineIdx; idx];
+    ResultData.allLineHeadBusIdx = [ResultData.allLineHeadBusIdx; find(CurrentStatus.bus(:,1)==fromBus)];
+    ResultData.allLineTailBusIdx = [ResultData.allLineTailBusIdx; find(CurrentStatus.bus(:,1)==endBus)];
+end
+
+
+
+
+

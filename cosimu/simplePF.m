@@ -110,7 +110,7 @@ if exist('Mot')
     end
 end
 
-fm_spf
+fm_spf_modified(Config);
 SNB.init = 0;
 LIB.init = 0;
 CPF.init = 0;

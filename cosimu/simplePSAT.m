@@ -6,7 +6,7 @@ disp('Time domain simulation.')
 Settings.freq = 60;
 clpsat.readfile = 1;
 Settings.fixt = 1;
-Settings.static = Config.simuType;
+% Settings.static = Config.simuType;
 
 runpsat(Config.caseName,Config.caseFileDir,'data');
 
