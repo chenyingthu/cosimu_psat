@@ -14,7 +14,7 @@ global Line Bus
 % Toggle Breaker Status
 
 action = {'Opening','Closing'};
-idx = [find(a.t1 == t); find(a.t2 == t)];
+idx = [find(abs(a.t1 - t) < 1e-9); find(abs(a.t2 - t) < 1e-9)];
 
 if ~isempty(idx)
 
@@ -33,7 +33,7 @@ if ~isempty(idx)
     Line = setstatus(Line,a.line(k),a.u(k));
     
     % update algebraic variables
-    %conv = fm_nrlf(40,1e-4,1,1);
+%     conv = fm_nrlf(40,1e-4,1,1);
   
     % checking network connectivity
     fm_flows('connectivity','verbose');

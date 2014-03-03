@@ -15,10 +15,11 @@ pwdpath = pwd;
 Config = initialConfig;
 
 if Config.simuType == 0
-    cd([pwd, '\loadshape\lf']);
+    cd([pwd, '\loadshape\lf']);    
 else
-    cd([pwd, '\loadshape\dyn']);
+    cd([pwd, '\loadshape\dyn']);    
 end
+Config.loadShapeFile = [pwd, '\loadshapeHour'];
 delete *.mat
 createhourloadshape(Config);
 

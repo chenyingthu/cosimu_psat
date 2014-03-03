@@ -23,7 +23,7 @@ switch caseGroupNo
 %         toBus = combntns([2:3], 2);
 %         toBus = toBus(length(toBus)/2 + 1 : end, :);
         strategy = [4]';
-        erroRatio = [0.5]';
+        erroRatio = [0.1:0.2:1]';
         seEnable = [1]';        
 %     case 3
 %         simuType = [0]';

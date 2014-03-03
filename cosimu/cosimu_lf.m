@@ -1,4 +1,4 @@
-function  ResultData = cosimu_avc_lf(Config, CurrentStatus, ResultData)
+function  ResultData = cosimu_lf(Config, CurrentStatus, ResultData)
 global Fig Settings Snapshot Hdl
 global Bus File DAE Theme OMIB
 global SW PV PQ Fault Ind Syn Exc Tg
@@ -17,6 +17,13 @@ loadshape = hourDataNew;
 nPointOfLoadShape = 0;
 sizeOfLoadShape = length(loadshape);
 
+% time vector of snapshots, faults and breaker events
+fixed_times = [];
+
+fixed_times = [fixed_times; gettimes(Fault); ...
+    gettimes(Breaker); gettimes(Ind)];
+fixed_times = sort(fixed_times);
+
 
 while (t < Settings.tf)
     
@@ -24,8 +31,25 @@ while (t < Settings.tf)
     if (t + h > Settings.tf), h = Settings.tf - t; end
     actual_time = t + h;
     
+%     index_times = find(fixed_times > t & fixed_times < t+h);
+%     if ~isempty(index_times);
+%         actual_time = min(fixed_times(index_times));
+%         h = actual_time - t;
+%     end
     % set global time
     DAE.t = actual_time;
+    
+    % applying faults, breaker interventions and perturbations
+    if ~isempty(fixed_times)
+        if ~isempty(find(abs(fixed_times - t) < 1e-3))
+            disp(['intervention time as ', num2str(t)]);
+            Fault = intervention(Fault,t);
+            Breaker = intervention(Breaker,t);
+            %% add some code to deal with the optimal powerflow model
+            lineIdx = ResultData.allLineIdx(Breaker.line);
+            CurrentStatus.branch(lineIdx, 11) = Breaker.u;
+        end
+    end
     
     if Config.enableLoadShape == 1
         %% increase the load acording the loadshape

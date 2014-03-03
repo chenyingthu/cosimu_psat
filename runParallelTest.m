@@ -9,8 +9,10 @@ addpath([pwd, '\tests']);
 addpath([pwd, '\loadshape']);
 pwdstr = pwd;
 
-parpool(2)
-spmd
-  % build magic squares in parallel
-  testBadDataInjectionMulti(labindex);
-end
+ testBadDataInjectionMulti(2);
+
+% parpool(2)
+% spmd
+%   % build magic squares in parallel
+%   testBadDataInjectionMulti(labindex);
+% end

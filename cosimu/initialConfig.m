@@ -1,9 +1,11 @@
 function Config = initialConfig
 
+Config.verbose = 0;
+
 Config.simuType = 0; % 0 for pf based , 1 for transient based
 
-Config.simuTime = 60*60/0.05;
-Config.simuNHour = 6;
+% Config.simuTime = 60*60/0.05;
+Config.simuEndTime = 6*3600;
 Config.basedir = [pwd, '\'];
 Config.debugdir = [pwd, '\debug\'];
 Config.caseFileDir = [pwd, '\psat\tests'];
@@ -12,11 +14,7 @@ Config.sampleRate  = 1;
 Config.controlPeriod = 5*60;
 Config.opfCaseName = 'case14';
 Config.limitControlled = 0;
-if Config.simuType == 0
-    Config.loadShapeFile = [pwd, '\loadshape\lf\loadshapeHour'];
-else
-    Config.loadShapeFile = [pwd, '\loadshape\dyn\loadshapeHour'];
-end
+Config.loadShapeFile = 'loadshapeHour';
 Config.enableOPFCtrl = 1;
 Config.enableLoadShape = 1;
 
@@ -35,8 +33,13 @@ Config.measLagSchema = 1; %1 for perfect comm with no latency; 2 for same latenc
 Config.measAllLatency = 5; % for latency of Config.measAllLatency*Config.DSSStepsize 
 Config.measLaggedTunnel = 1 : 1 : 30;
 Config.measTunnelLatency = zeros(size(Config.measLaggedTunnel));
+Config.ctrlLagSchema = 1; %1 for perfect comm with no latency; 2 for same latency for all tunnels; 3 for dif. latency for dif. tunnels;
 Config.ctrlAllLatency = 1; % for latency of Config.ctrlAllLatency
 Config.ctrlTGap = 0.1; % control time within current time +/- ctrlTGap => ctrl operation  
+Config.subAttackSchema = 1; % 1 for no substation attack ; % 2 for substation lost after attacks
+Config.attackedBus = []; % bus list been attacked
+Config.attackTime = [];  % attacked time in seconds
+
 
 Config.genSetpointType = 2; % 1 for v ; 2 for q
 

@@ -21,7 +21,7 @@ function  fm_out(flag,t,k)
 global Settings Bus DAE Varout Varname Fig
 
 %% added by cy to disable all storage to save and accelerate
-return;
+% return;
 
 persistent compute_pijs
 nb = Bus.n;

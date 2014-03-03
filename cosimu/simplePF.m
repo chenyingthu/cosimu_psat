@@ -110,7 +110,37 @@ if exist('Mot')
     end
 end
 
+%% deal with substation attacks
+con = [];
+if Config.subAttackSchema == 2
+    % to form the breaker.con
+    nBus = length(Config.attackedBus);
+    nT = length(Config.attackTime);
+    if nBus > 0 & nT > 0 & nBus==nT
+        for iBus = 1 : nBus
+           bus = Config.attackedBus(iBus);
+           t = Config.attackTime(iBus);
+           iFLine = find(Line.con(:, 1) == bus);
+           iTLine = find(Line.con(:, 2) == bus);
+           iLine = [iFLine; iTLine];
+           conTmp = [iLine, ones(size(iLine))* bus, ...
+               ones(size(iLine))* 100, ones(size(iLine))* 100, ...
+               ones(size(iLine))* 60, ...
+               ones(size(iLine)), ones(size(iLine))*t, ...
+               ones(size(iLine))*9999, ones(size(iLine)), ...
+               ones(size(iLine))];  
+           con = [con; conTmp];
+        end        
+    end
+        
+    Breaker.con = con;
+    
+end
+
 fm_spf_modified(Config);
+
+
+
 SNB.init = 0;
 LIB.init = 0;
 CPF.init = 0;

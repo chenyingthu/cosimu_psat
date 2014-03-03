@@ -28,6 +28,7 @@ if Settings.show
 end
 nodyn = 0;
 
+
 % these computations are needed only the first time the power flow is run
 if ~Settings.init
   % bus type initialization
@@ -40,8 +41,11 @@ if ~Settings.init
   % create the FM_CALL FUNCTION
   if Settings.show, fm_disp('Writing file "fm_call" ...',1), end
 %   fm_wcall;
-  fm_dynlf; % indicization of components used in power flow computations
+  Settings.init = 1;
 end
+
+fm_dynlf; % indicization of components used in power flow computations
+    
 
 % memory allocation for equations and Jacobians
 DAE.g = ones(DAE.m,1);

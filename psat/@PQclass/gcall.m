@@ -24,8 +24,8 @@ end
 if ~isempty(b)
   k = p.bus(b);
   h = p.vbus(b);
-  p.P(b) = p.con(a,4).*DAE.y(h).*DAE.y(h)./p.con(a,7)./p.con(a,7);
-  p.Q(b) = p.con(a,5).*DAE.y(h).*DAE.y(h)./p.con(a,7)./p.con(a,7);
+  p.P(b) = p.con(b,4).*DAE.y(h).*DAE.y(h)./p.con(b,7)./p.con(b,7);
+  p.Q(b) = p.con(b,5).*DAE.y(h).*DAE.y(h)./p.con(b,7)./p.con(b,7);
   DAE.g(k) = p.con(b,4).*DAE.y(h).*DAE.y(h)./p.con(b,6)./p.con(b,6) + ...
       DAE.g(k) - p.con(b,4);
   DAE.g(h) = p.con(b,5).*DAE.y(h).*DAE.y(h)./p.con(b,6)./p.con(b,6) + ...

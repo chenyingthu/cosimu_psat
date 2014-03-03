@@ -1,4 +1,4 @@
-function  ResultData = cosimu_avc_dyn(Config, CurrentStatus, ResultData)
+function  ResultData = cosimu_dyn(Config, CurrentStatus, ResultData)
 global Fig Settings Snapshot Hdl
 global Bus File DAE Theme OMIB
 global SW PV PQ Fault Ind Syn Exc Tg
@@ -89,9 +89,6 @@ callpert = 1;
 % get initial network connectivity
 fm_flows('connectivity', 'verbose');
 
-% output initialization
-fm_out(0,0,0);
-fm_out(2,Settings.t0,k);
 
 % time vector of snapshots, faults and breaker events
 fixed_times = [];
@@ -159,6 +156,9 @@ while (t < Settings.tf) && (t + h > t) && ~diff_max
         if ~isempty(find(fixed_times == actual_time))
             Fault = intervention(Fault,actual_time);
             Breaker = intervention(Breaker,actual_time);
+            %% add some code to deal with the optimal powerflow model
+            lineIdx = ResultData.allLineIdx(Breaker.line);
+            CurrentStatus.branch(lineIdx, 11) = Breaker.u;
         end
     end
     
@@ -180,12 +180,13 @@ while (t < Settings.tf) && (t + h > t) && ~diff_max
         
         
     end
-    %     PQ.con(:, [4, 5]) = (1 + nPointOfLoadShape*0.1)* PQ.con(:, [4, 5]);
+    
     %
     % Newton-Raphson loop
     Settings.error = tol+1;
     while Settings.error > tol
         if (iterazione > iter_max)
+            disp(['dyn iteration not converged for ', num2str( actual_time)]);
             break
         end
         
@@ -221,10 +222,7 @@ while (t < Settings.tf) && (t + h > t) && ~diff_max
     else
         h = fm_tstep(2,1,iterazione,t);
         t = actual_time;
-        k = k+1;
-        % extend output stack
-        if k > length(Varout.t), fm_out(1,t,k); end
-        fm_out(2,t,k);
+        k = k+1;                
         i_plot = 1+k-10*fix(k/10);
         perc = (t-Settings.t0)/(Settings.tf-Settings.t0);
         if i_plot == 10
@@ -246,8 +244,7 @@ while (t < Settings.tf) && (t + h > t) && ~diff_max
     if Config.enableOPFCtrl == 1
         %     %% check the voltages of all buses to shed/recovery load
         %     ResultData = LoadShedAndRecovery(Config,ResultData);
-        %
-        %
+       
         %     %% do control according opf result
         if abs(t - ResultData.nOpf*Config.controlPeriod) <= Settings.tstep
             %         % make measurements for control center to do opf control
@@ -297,7 +294,7 @@ while (t < Settings.tf) && (t + h > t) && ~diff_max
     
 end
 disp(['haha =============>  simulation end with t = ', num2str(t)]);
-fm_out(3,t,k);
+
 
 
 
