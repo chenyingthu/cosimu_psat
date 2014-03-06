@@ -2,7 +2,7 @@
 %2. to simulate the voltage control with only local control strategies
 clear ;
 % clear classes;
-cd ..
+% cd ..
 addpath([pwd, '\coSimu']);
 addpath([pwd, '\psat']);
 addpath([pwd, '\psat\filters']);
@@ -15,11 +15,11 @@ pwdpath = pwd;
 Config = initialConfig;
 
 %% user config for experiment
-Config.verbose = 0; % 0 not output details ; 1 output all logs
+Config.verbose = 1; % 0 not output details ; 1 output all logs
 Config.caseName = 'd_039ieee.m'; % case name for psat simulator
 Config.opfCaseName = 'case39'; % case name for the matpower4.1
-Config.simuType = 0; % 0 for pf based , 1 for transient model based
-Config.simuEndTime = 20; % seconds based simulation time, 5*60 means 5 min;
+Config.simuType = 1; % 0 for pf based , 1 for transient model based
+Config.simuEndTime = 80; % seconds based simulation time, 5*60 means 5 min;
 Config.controlPeriod = 6; % seconds based control interval, 2*60 means 2 min;
 Config.sampleRate  = 0.1; % secnods based sample rate for all measurements;
 Config.enableOPFCtrl = 1; % opf control should be used for this control;

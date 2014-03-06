@@ -30,13 +30,7 @@ while (t < Settings.tf)
     %% one step integration
     if (t + h > Settings.tf), h = Settings.tf - t; end
     actual_time = t + h;
-    
-%     index_times = find(fixed_times > t & fixed_times < t+h);
-%     if ~isempty(index_times);
-%         actual_time = min(fixed_times(index_times));
-%         h = actual_time - t;
-%     end
-    % set global time
+   
     DAE.t = actual_time;
     
     % applying faults, breaker interventions and perturbations

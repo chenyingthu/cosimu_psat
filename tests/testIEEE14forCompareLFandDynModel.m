@@ -29,18 +29,46 @@ Config.falseDataSchema = 0; % 0 for no false data  ; 1 for random erro based on 
 
 %% cyber attacks
 
-% Config.falseDataSchema = 2;
-% Config.falseDataAttacks{1}.toBus = [2:3];
-% Config.falseDataAttacks{1}.strategy = [4]';
-% Config.falseDataAttacks{1}.erroRatio = [0.3]';
+Config.falseDataSchema = 2;
+Config.falseDataAttacks{1}.toBus = [2:3];
+Config.falseDataAttacks{1}.strategy = [4]';
+Config.falseDataAttacks{1}.erroRatio = [0.3]';
            
 
-%% execute the simulation
-
-% testBadDataInjectionMulti(Config, 2);
-
-parpool(6)
-spmd
-  % build magic squares in parallel
-  testBadDataInjectionMulti(Config, labindex);
+%% for cyber attack cases
+Config.simuType = 0;
+%% create load shape for simulation. even no load shape is used,  keep this code 
+if Config.simuType == 0
+    cd([pwd, '\loadshape\lf']);    
+else
+    cd([pwd, '\loadshape\dyn']);    
 end
+Config.loadShapeFile = [pwd, '\loadshapeHour'];
+delete *.mat
+createhourloadshape(Config);
+cd(pwdstr);
+
+%% create case name for record
+ResultData_lf = simplePSAT(Config);
+cd(pwdstr);
+%%
+Config.simuType = 1;
+if Config.simuType == 0
+    cd([pwd, '\loadshape\lf']);    
+else
+    cd([pwd, '\loadshape\dyn']);    
+end
+Config.loadShapeFile = [pwd, '\loadshapeHour'];
+delete *.mat
+createhourloadshape(Config);
+cd(pwdstr);
+
+%% create case name for record
+ResultData_dyn = simplePSAT(Config);
+
+%% compare results
+npoint = ResultData_lf.nSample;
+diffV = ResultData_lf.allBusVHis - ResultData_dyn.allBusVHis(:, 1:npoint);
+figure(1);plot(diffV(1,:));
+figure(2);plot(diffV(31,:));
+

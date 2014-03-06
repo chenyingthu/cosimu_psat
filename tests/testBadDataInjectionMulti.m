@@ -1,4 +1,4 @@
-function testBadDataInjectionMulti(caseGroupNo)
+function testBadDataInjectionMulti(Config, caseGroupNo)
 %% test 1 : 
 %for the false data schema 1 with different measErroRatio and genSetpointType
 
@@ -10,53 +10,51 @@ switch caseGroupNo
     case 1  
         simuType = [0]';
         falseDataSchema = [2]';        
-        toBus = combntns([2:3], 2);
-        toBus = [2:3];
-%         toBus = toBus(1:length(toBus)/2, :);
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(1:length(toBus)/2, :);
         strategy = [4]';
         erroRatio = [0.5]';
         seEnable = [1]';
     case 2  
-        simuType = [1]';
+        simuType = [0]';
         falseDataSchema = [2]';
-        toBus = [2:3];
-%         toBus = combntns([2:3], 2);
-%         toBus = toBus(length(toBus)/2 + 1 : end, :);
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(length(toBus)/2 + 1 : end, :);
         strategy = [4]';
-        erroRatio = [0.1:0.2:1]';
+        erroRatio = [0.5]';
         seEnable = [1]';        
-%     case 3
-%         simuType = [0]';
-%         falseDataSchema = [2]';        
-%         toBus = combntns([2:1:14], 2);
-%         toBus = toBus(1:length(toBus)/2, :);
-%         strategy = [4]';
-%         erroRatio = [-1]';
-%         seEnable = [1]';
-%     case 4
-%         simuType = [0]';
-%         falseDataSchema = [2]';        
-%         toBus = combntns([2:1:14], 2);
-%         toBus = toBus(length(toBus)/2 + 1 : end, :);
-%         strategy = [4]';
-%         erroRatio = [-1]';
-%         seEnable = [1]';
-%     case 5  
-%         simuType = [1]';
-%         falseDataSchema = [2]';        
-%         toBus = combntns([2:1:14], 2);
-%         toBus = toBus(1:length(toBus)/2, :);
-%         strategy = [4]';
-%         erroRatio = [1]';
-%         seEnable = [1]';
-%     case 6
-%         simuType = [1]';
-%         falseDataSchema = [2]';        
-%         toBus = combntns([2:1:14], 2);
-%         toBus = toBus(length(toBus)/2 + 1 : end, :);
-%         strategy = [4]';
-%         erroRatio = [1]';
-%         seEnable = [1]';
+    case 3
+        simuType = [0]';
+        falseDataSchema = [2]';        
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(1:length(toBus)/2, :);
+        strategy = [4]';
+        erroRatio = [-0.5]';
+        seEnable = [1]';
+    case 4
+        simuType = [0]';
+        falseDataSchema = [2]';        
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(length(toBus)/2 + 1 : end, :);
+        strategy = [4]';
+        erroRatio = [-0.5]';
+        seEnable = [1]';
+    case 5  
+        simuType = [1]';
+        falseDataSchema = [2]';        
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(1:length(toBus)/2, :);
+        strategy = [4]';
+        erroRatio = [1]';
+        seEnable = [0.5]';
+    case 6
+        simuType = [1]';
+        falseDataSchema = [2]';        
+        toBus = combntns([2:1:14], 2);
+        toBus = toBus(length(toBus)/2 + 1 : end, :);
+        strategy = [4]';
+        erroRatio = [1]';
+        seEnable = [0.5]';
 %     case 7
 %         simuType = [1]';
 %         falseDataSchema = [2]';        
@@ -96,7 +94,7 @@ experimentName = ['fdi_2b_group_',num2str(caseGroupNo), strrep(strrep(datestr(no
 dstFilePath = [pwd, '\debug\', experimentName, '\'];
 
 
-[nCase, caseConfigs ] = MultiRunCoSimu(MultiRunConfig, dstFilePath);
+[nCase, caseConfigs ] = MultiRunCoSimu(Config, MultiRunConfig, dstFilePath);
 cd(pwdstr);
 
 % MultiRunConfig.ResultCompareName = 'performance.all';

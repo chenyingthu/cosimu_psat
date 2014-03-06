@@ -21,6 +21,8 @@ function check = pst2psat(filename, pathname)
 % Copyright (C) 2002-2009 Federico Milano
 
 global Settings
+pwdstr = pwd;
+cd(pathname);
 
 check = 1;
 pathname = [pathname,filesep];
@@ -50,6 +52,7 @@ ibus_con = [];
 netg_con = [];
 stab_con = [];
 
+
 % load PST data & check for consistency
 try,
   eval(filename(1:end-2));
@@ -65,6 +68,7 @@ if isempty(bus)
   return
 end
 
+cd(pwdstr);
 % some settings
 bus(:,3) = pi*bus(:,3)/180;
 mvabas = 100;
@@ -141,7 +145,7 @@ end
 % PQ bus data PQ.con
 % ---------------------------------------------------------------------
 
-row = find(bus(:,6) ~= 0 || bus(:,7) ~= 0);
+row = find(bus(:,6) ~= 0 | bus(:,7) ~= 0);
 if ~isempty(row)
   fm_disp('bus -> PQ.con')
   count = fprintf(fid, 'PQ.con = [ ...\n');
@@ -161,7 +165,7 @@ end
 % Shunt bus data Shunt.con
 % ---------------------------------------------------------------------
 
-row = find(bus(:,8) ~= 0 || bus(:,9) ~= 0);
+row = find(bus(:,8) ~= 0 | bus(:,9) ~= 0);
 if ~isempty(row)
   fm_disp('bus -> Shunt.con')
   count = fprintf(fid, 'Shunt.con	= [ ...\n');
@@ -183,7 +187,7 @@ end
 nrow = length(net_line(1,:));
 if nrow < 10, net_line = [net_line,zeros(sizeline,10-nrow)]; end
 
-idx = find(net_line(:,8)==0 && net_line(:,9)==0 && net_line(:,10)==0);
+idx = find(net_line(:,8)==0 & net_line(:,9)==0 & net_line(:,10)==0);
 if ~isempty(idx)
   fm_disp('line -> Line.con')
   format = ['%4d %4d %8.4g %8.4g %8.4g %8.4g %8.4g %8.4g ' ...
@@ -192,7 +196,7 @@ if ~isempty(idx)
   for i = 1:length(idx)-1
     k = idx(i);
     kV = bus(find(bus(:,1)==net_line(k,1)),13);
-    %if net_line(k,6) ~= 0 || net_line(k,7) ~= 0
+    %if net_line(k,6) ~= 0 | net_line(k,7) ~= 0
     kV2 = bus(find(bus(:,1)==net_line(k,2)),13);
     tap = kV/kV2;
     if tap == 1, tap = 0; end
@@ -204,7 +208,7 @@ if ~isempty(idx)
   end
   k = idx(end);
   kV = bus(find(bus(:,1)==net_line(k,1)),13);
-  %if net_line(k,6) ~= 0 || net_line(k,7) ~= 0
+  %if net_line(k,6) ~= 0 | net_line(k,7) ~= 0
   kV2 = bus(find(bus(:,1)==net_line(k,2)),13);
   tap = kV/kV2;
   if tap == 1, tap = 0; end
@@ -218,7 +222,7 @@ end
 % Under load transformer data Ltc.con
 % ------------------------------------------------------------------------
 
-idx = find(net_line(:,8)~=0 || net_line(:,9)~=0 || net_line(:,10)~=0);
+idx = find(net_line(:,8)~=0 | net_line(:,9)~=0 | net_line(:,10)~=0);
 if ~isempty(idx)
   fm_disp('line -> Ltc.con')
   format = ['%4d %4d %8.4g %8.4g %8.4g %8.4g %8.4g %8.4g ' ...
@@ -263,9 +267,9 @@ if ~isempty(mac_con)
     Td2 = mac_con(i,10);
     Tq1 = mac_con(i,14);
     Tq2 = mac_con(i,15);
-    if Tq2 && Tq1 && Td2, ord = 6;
-    elseif Tq2 && Td2,   ord = 5.2;
-    elseif Tq1 && Tq2,   ord = 5.1;
+    if Tq2 & Tq1 & Td2, ord = 6;
+    elseif Tq2 & Td2,   ord = 5.2;
+    elseif Tq1 & Tq2,   ord = 5.1;
     elseif Tq1,         ord = 4;
     elseif Td1,         ord = 3;
     else,               ord = 2;
@@ -281,9 +285,9 @@ if ~isempty(mac_con)
   Td2 = mac_con(i,10);
   Tq1 = mac_con(i,14);
   Tq2 = mac_con(i,15);
-  if Tq2 && Tq1 && Td2, ord = 6;
-  elseif Tq2 && Td2,   ord = 5.2;
-  elseif Tq1 && Tq2,   ord = 5.1;
+  if Tq2 & Tq1 & Td2, ord = 6;
+  elseif Tq2 & Td2,   ord = 5.2;
+  elseif Tq1 & Tq2,   ord = 5.1;
   elseif Tq1,         ord = 4;
   elseif Td1,         ord = 3;
   else,               ord = 2;
@@ -296,7 +300,7 @@ end
 % Induction motor data Ind.con
 % ------------------------------------------------------------------------
 
-if ~isempty(ind_con) && ~isempty(mld_con) && length(ind_con(:,1))==length(mld_con(:,1))
+if ~isempty(ind_con) & ~isempty(mld_con) & length(ind_con(:,1))==length(mld_con(:,1))
   fm_disp('ind_con -> Ind.con')
   fm_disp('    Some approximations are used for induction motors:')
   fm_disp('    Check mechanical torque parameters before running the power flow.')
@@ -312,7 +316,7 @@ if ~isempty(ind_con) && ~isempty(mld_con) && length(ind_con(:,1))==length(mld_co
     r2 = ind_con(i,10);
     x2 = ind_con(i,11);
     r1 = ind_con(i,4);
-    if r2 || x2, ord = 5;
+    if r2 | x2, ord = 5;
     elseif r1,  ord = 3;
     else,       ord = 1;
     end
@@ -328,7 +332,7 @@ if ~isempty(ind_con) && ~isempty(mld_con) && length(ind_con(:,1))==length(mld_co
   r2 = ind_con(i,10);
   x2 = ind_con(i,11);
   r1 = ind_con(i,4);
-  if r2 || x2, ord = 5;
+  if r2 | x2, ord = 5;
   elseif r1,  ord = 3;
   else,       ord = 1;
   end
@@ -397,7 +401,7 @@ if ~isempty(exc_con)
     if exc_con(i,1) < 3
       Tf = exc_con(i,17);
       Te = exc_con(i,11);
-      if ~Te && ~Tf
+      if ~Te & ~Tf
         data = [genn,3,exc_con(i,[8,9,4,5,7]),0,0,0,exc_con(i,3),0,0];
       else
         data = [genn,2,exc_con(i,[8,9,4,5,16,17]),0, ...
@@ -421,7 +425,7 @@ if ~isempty(exc_con)
   if exc_con(i,1) < 3
     Tf = exc_con(i,17);
     Te = exc_con(i,11);
-    if ~Te && ~Tf
+    if ~Te & ~Tf
       data = [genn,3,exc_con(i,[8,9,4,5,7]),0,0,0,exc_con(i,3),0,0];
     else
       data = [genn,2,exc_con(i,[8,9,4,5,16,17]),0, ...
@@ -519,10 +523,10 @@ if ~isempty(sw_con)
    case 4
     fm_disp('sw_con -> Breaker.con')
     format = '%4d %4d %4d %8.4g %8.4g';
-    linen = find(net_line(:,1) == sw_con(2,2) && ...
+    linen = find(net_line(:,1) == sw_con(2,2) & ...
                  net_line(:,2) == sw_con(2,3));
     if isempty(linen)
-      linen = find(net_line(:,2) == sw_con(2,2) && ...
+      linen = find(net_line(:,2) == sw_con(2,2) & ...
                    net_line(:,1) == sw_con(2,3));
     end
     if isempty(linen),

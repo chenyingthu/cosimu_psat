@@ -1,4 +1,4 @@
-function [r, rtConfigs] = MultiRunCoSimu(MultiRunConfig, dstFilePath)
+function [r, rtConfigs] = MultiRunCoSimu(Config, MultiRunConfig, dstFilePath)
 
 warning off all
 
@@ -11,8 +11,6 @@ if ~exist(dstFilePath, 'dir')
 end
 
 diary([dstFilePath,'experiment.log']);
-
-Config = initialConfig;
 
 initialCfgFileName = [dstFilePath, 'initialConfigs', '.mat'];
 save(initialCfgFileName , 'Config');

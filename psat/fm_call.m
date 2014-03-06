@@ -48,6 +48,9 @@ switch flag
   fcall(Syn)
   Exc = fcall(Exc);
   Tg = fcall(Tg);
+  if ~isempty(Pss.con)
+      Pss = fcall(Pss);
+  end
 
  case '1r'
 
@@ -56,6 +59,9 @@ switch flag
   Syn = gcall(Syn);
   gcall(Exc)
   gcall(Tg)
+  if ~isempty(Pss.con)
+      gcall(Pss)
+  end
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
@@ -73,12 +79,18 @@ switch flag
   Fxcall(Syn)
   Fxcall(Exc)
   Fxcall(Tg)
+  if ~isempty(Pss.con)
+      Fxcall(Pss)
+  end
 
  case '0'
 
   Syn = setx0(Syn);
   Exc = setx0(Exc);
   Tg = setx0(Tg);
+  if ~isempty(Pss.con)
+      Pss = setx0(Pss);
+  end
 
  case 'fdpf'
 
@@ -116,6 +128,9 @@ switch flag
   Syn = gcall(Syn);
   gcall(Exc)
   gcall(Tg)
+  if ~isempty(Pss.con)
+      gcall(Pss)
+  end
   gisland(Bus)
   Gycall(Line)
   Gycall(PQ)
@@ -164,6 +179,9 @@ switch flag
   Syn = gcall(Syn);
   gcall(Exc)
   gcall(Tg)
+  if ~isempty(Pss.con)
+      gcall(Pss)
+  end
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
@@ -184,6 +202,9 @@ switch flag
   Syn = gcall(Syn);
   gcall(Exc)
   gcall(Tg)
+  if ~isempty(Pss.con)
+      gcall(Pss)
+  end
   PV = gcall(PV);
   SW = gcall(SW);
   gisland(Bus)
@@ -194,6 +215,9 @@ switch flag
   Gycall(Tg)
   Gycall(PV)
   Gycall(SW)
+  if ~isempty(Pss.con)
+      Gycall(Pss)
+  end
   Gyisland(Bus)
 
 
@@ -210,11 +234,16 @@ switch flag
   Fxcall(Syn)
   Fxcall(Exc)
   Fxcall(Tg)
+  if ~isempty(Pss.con)
+      Fxcall(Pss)
+  end
   Fxcall(PV)
   Fxcall(SW)
 
  case '5'
 
   windup(Exc)
-
+  if ~isempty(Pss.con)
+      windup(Pss)
+  end
 end
