@@ -137,12 +137,18 @@ switch flag
   Syn = Gycall(Syn);
   Gycall(Exc)
   Gycall(Tg)
+  if ~isempty(Pss.con)
+      Gycall(Pss)
+  end
   Gyisland(Bus)
 
 
   fcall(Syn)
   Exc = fcall(Exc);
   Tg = fcall(Tg);
+  if ~isempty(Pss.con)
+      fcall(Pss)
+  end
 
   DAE.Fx = sparse(DAE.n,DAE.n);
   DAE.Fy = sparse(DAE.n,DAE.m);
@@ -150,6 +156,10 @@ switch flag
   Fxcall(Syn)
   Fxcall(Exc)
   Fxcall(Tg)
+  if ~isempty(Pss.con)
+      Fxcall(Pss)
+  end
+
 
  case 'kgpf'
 
@@ -190,6 +200,9 @@ switch flag
   Syn = Gycall(Syn);
   Gycall(Exc)
   Gycall(Tg)
+  if ~isempty(Pss.con)
+      Gycall(Pss)
+  end
   Gycall(PV)
   Gycall(SW)
   Gyisland(Bus)
@@ -213,17 +226,21 @@ switch flag
   Syn = Gycall(Syn);
   Gycall(Exc)
   Gycall(Tg)
-  Gycall(PV)
-  Gycall(SW)
   if ~isempty(Pss.con)
       Gycall(Pss)
   end
+  
+  Gycall(PV)
+  Gycall(SW)
   Gyisland(Bus)
 
 
   fcall(Syn)
   Exc = fcall(Exc);
   Tg = fcall(Tg);
+  if ~isempty(Pss.con)
+      Pss = fcall(Pss);
+  end
 
   if DAE.n > 0
   DAE.Fx = sparse(DAE.n,DAE.n);
