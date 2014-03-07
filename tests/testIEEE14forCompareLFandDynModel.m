@@ -1,4 +1,5 @@
 clear;
+cd ..
 addpath([pwd, '\coSimu']);
 addpath([pwd, '\psat']);
 addpath([pwd, '\psat\filters']);
@@ -70,5 +71,5 @@ ResultData_dyn = simplePSAT(Config);
 npoint = ResultData_lf.nSample;
 diffV = ResultData_lf.allBusVHis - ResultData_dyn.allBusVHis(:, 1:npoint);
 figure(1);plot(diffV(1,:));
-figure(2);plot(diffV(31,:));
+figure(2);plot(diffV(10,:));
 

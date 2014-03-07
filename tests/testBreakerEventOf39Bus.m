@@ -19,10 +19,10 @@ Config.verbose = 1; % 0 not output details ; 1 output all logs
 Config.caseName = 'd_039ieee.m'; % case name for psat simulator
 Config.opfCaseName = 'case39'; % case name for the matpower4.1
 Config.simuType = 1; % 0 for pf based , 1 for transient model based
-Config.simuEndTime = 20; % seconds based simulation time, 5*60 means 5 min;
+Config.simuEndTime = 80; % seconds based simulation time, 5*60 means 5 min;
 Config.controlPeriod = 6; % seconds based control interval, 2*60 means 2 min;
 Config.sampleRate  = 0.1; % secnods based sample rate for all measurements;
-Config.enableOPFCtrl = 0; % opf control should be used for this control;
+Config.enableOPFCtrl = 1; % opf control should be used for this control;
 Config.enableLoadShape = 0; % load shape will not enable for this simulation;
 Config.lfTStep = 0.1; % seconds based time step for lf model driven simulation;
 Config.dynTStep = 0.05; % seconds based time step for dyn model driven simulation;
@@ -32,9 +32,9 @@ Config.ctrlLagSchema = 1; %1 for perfect comm with no latency; 2 for same latenc
 Config.falseDataSchema = 0; % 0 for no false data  ; 1 for random erro based on white noise ; 2 for special false data strategy
 
 %% user config for the bus attacked
-Config.subAttackSchema = 1; % 1 for no substation attack ; % 2 for substation lost after attacks
+Config.subAttackSchema = 2; % 1 for no substation attack ; % 2 for substation lost after attacks
 Config.attackedBus = [18, 17]; % bus list attacked;
-Config.attackTime = [5, 5]; % attacked to each bus in seconds
+Config.attackTime = [5, 10]; % attacked to each bus in seconds
 
 %% create load shape for simulation. even no load shape is used,  keep this code 
 if Config.simuType == 0
