@@ -49,7 +49,7 @@ delete *.mat
 createhourloadshape(Config);
 cd(pwdstr);
 
-%% create case name for record
+
 ResultData_lf = simplePSAT(Config);
 cd(pwdstr);
 %%
@@ -64,9 +64,10 @@ delete *.mat
 createhourloadshape(Config);
 cd(pwdstr);
 
-%% create case name for record
+
 ResultData_dyn = simplePSAT(Config);
 
+cd(pwdstr);
 %% compare results
 npoint = ResultData_lf.nSample;
 diffV = ResultData_lf.allBusVHis - ResultData_dyn.allBusVHis(:, 1:npoint);
