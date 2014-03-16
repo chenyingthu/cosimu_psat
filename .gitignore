@@ -219,9 +219,8 @@ pip-log.txt
 .asv .mat
 
 /*.asv
-
 /loadshape/*.mat
-
+/loadshape/lf/*.mat
+/loadshape/dyn/*.mat
 /psat/tests/*.asv
 
-/psat/tests/*.asv

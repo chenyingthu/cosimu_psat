@@ -25,7 +25,7 @@ createhourloadshape(Config);
 
 cd(pwdpath);
 
-caseName = ['psat_simu_', num2str(Config.simuNHour)];
+caseName = ['psat_simu_', num2str(Config.simuEndTime)];
 startTime =  strrep(strrep(datestr(now), ':', '-'), ' ', '-');
 disp([caseName, 'started at ', startTime]);
 
