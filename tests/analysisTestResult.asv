@@ -1,0 +1,23 @@
+load debug/39_base_case
+ploss_no_ctl = ResultData.pLossHis';
+
+
+load debug/baseCase_opfctrl
+ploss_ctl = ResultData.pLossHis';
+
+load debug/baseCase_opfCtrl_bus3_lag10
+ploss_ctl_b3_lag10 = ResultData.pLossHis';
+
+load debug/baseCase_optCtl_bus3_lagInf
+ploss_ctl_b3_lagInf = ResultData.pLossHis';
+
+load debug/baseCase_opfCtrl_bus3_falseData
+ploss_ctl_b3_fd = ResultData.pLossHis';
+
+y = [ploss_no_ctl; ploss_ctl ; ploss_ctl_b3_lag10; ploss_ctl_b3_lagInf; ploss_ctl_b3_fd];
+x = ResultData.t;
+
+plot(x,y);
+legend(
+xlabel('time(s)');
+ylable('ploss(PU)');

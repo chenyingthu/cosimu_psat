@@ -32,6 +32,7 @@ ResultData.nSample = 0;
 ResultData.nOpf = 0;
 
 ResultData.allLoadIdx = [];
+ResultData.allLoadBusIdx = PQ.bus;
 busIdx = PQ.bus;
 for iBus = 1 : PQ.n
     idx = find(CurrentStatus.bus(:,1) == busIdx(iBus));
@@ -43,12 +44,14 @@ ResultData.loadBase = CurrentStatus.loadBase(ResultData.allLoadIdx, :)/100;
 ResultData.allBusIdx = Bus.int;
 
 ResultData.allGenIdx = [];
+ResultData.allGenBusIdx = [];
 synIdx = [];
 if Config.simuType == 0
     synIdx = [SW.bus; PV.bus];
 else
     synIdx = Syn.bus;
 end
+ResultData.allGenBusIdx = synIdx;
 for iGen = 1 : length(synIdx)
     idx = find(CurrentStatus.gen(:,1) == synIdx(iGen));
     ResultData.allGenIdx = [ResultData.allGenIdx; idx];
