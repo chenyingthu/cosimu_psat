@@ -62,23 +62,68 @@ elseif Config.measLagSchema == 3
         CurrentStatus.plineHeadMeas(iLine) = ResultData.allLineHeadPHis(iLine, iSnapshot);
         CurrentStatus.qlineHeadMeas(iLine) = ResultData.allLineHeadQHis(iLine, iSnapshot);
         
-        iLine = find(ResultData.allLineTailBusIdx == iBus);
+        iLine = find(ResultData.allLineTailBusIdx(iLine);
+        iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+        if iSnapshot < 1
+            iSnapshot = 1;
+        end
         CurrentStatus.plineTailMeas(iLine) = ResultData.allLineTailPHis(iLine, iSnapshot);
         CurrentStatus.qlineTailMeas(iLine) = ResultData.allLineTailQHis(iLine, iSnapshot);
         
-        iGen = find(ResultData.allGenBusIdx == iBus);
-        if ~isempty(iGen)
-            iGen2 = ResultData.allGenIdx(iGen)
-            CurrentStatus.genPMeas(iGen2) = ResultData.allPGenHis(iGen, iSnapshot);
-            CurrentStatus.genQMeas(iGen2) = ResultData.allQGenHis(iGen, iSnapshot);
-        end
-        
-        iLoad = find(ResultData.allLoadBusIdx == iBus);    
-        if ~isempty(iLoad)
-            CurrentStatus.ploadMeas(iLoad) = ResultData.allPLoadHis(iLoad, iSnapshot);
-            CurrentStatus.qloadMeas(iLoad) = ResultData.allQLoadHis(iLoad, iSnapshot);
-        end
     end
+%     
+    nSample = length(ResultData.t);
+%     for iTransf = 1 : ResultData.nTransf
+%         iTun = ResultData.allTransfHeadBusIdx(iTransf);
+%         iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+%         if iSnapshot < 1
+%             iSnapshot = 1;
+%         end
+%         CurrentStatus.transfTMeas(iTransf) = ResultData.allTransfTHis(iTransf, iSnapshot);
+%         CurrentStatus.ptransfHeadMeas = ResultData.allTransfHeadPHis(iTransf, iSnapshot);
+%         CurrentStatus.qtransfHeadMeas = ResultData.allTransfHeadQHis(iTransf, iSnapshot);
+%         CurrentStatus.ptransfTailMeas = ResultData.allTransfTailPHis(iTransf, iSnapshot);
+%         CurrentStatus.qtransfTailMeas = ResultData.allTransfTailQHis(iTransf, iSnapshot);       
+%     end
+%     
+    for iLine = 1 : ResultData.nLines
+        iTun = ResultData.allLineHeadBusIdx(iLine);
+        iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+        if iSnapshot < 1
+            iSnapshot = 1;
+        end
+        CurrentStatus.plineHeadMeas(iLine) = ResultData.allLineHeadPHis(iLine, iSnapshot);
+        CurrentStatus.qlineHeadMeas(iLine) = ResultData.allLineHeadQHis(iLine, iSnapshot);
+        
+        iTun = ResultData.allLineTailBusIdx(iLine);
+        iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+        if iSnapshot < 1
+            iSnapshot = 1;
+        end
+        CurrentStatus.plineTailMeas(iLine) = ResultData.allLineTailPHis(iLine, iSnapshot);
+        CurrentStatus.qlineTailMeas(iLine) = ResultData.allLineTailQHis(iLine, iSnapshot);
+    end
+%     
+    for iGen = 1 : ResultData.nGens
+        iTun = ResultData.allGenIdx(iGen);
+        iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+        if iSnapshot < 1
+            iSnapshot = 1;
+        end
+        CurrentStatus.genPMeas(iGen) = ResultData.allPGenHis(iGen, iSnapshot);
+        CurrentStatus.genQMeas(iGen) = ResultData.allQGenHis(iGen, iSnapshot);
+    end
+    
+    for iLoad = 1 : ResultData.nLoad
+        iTun = ResultData.allLoadIdx(iLoad);
+        iSnapshot = round(nSample - Config.measTunnelLatency(iTun));
+        if iSnapshot < 1
+            iSnapshot = 1;
+        end
+       CurrentStatus.ploadMeas(iLoad) = ResultData.allPLoadHis(iLoad, iSnapshot);
+       CurrentStatus.qloadMeas(iLoad) = ResultData.allQLoadHis(iLoad, iSnapshot);
+    end
+% 
 end
 % 
 % 
@@ -232,8 +277,7 @@ elseif Config.falseDataSchema == 2
                     vRandDir = 1;
                     loadRandDir = -1;
                     v = CurrentStatus.busVMeasPu(busIdx);
-%                     CurrentStatus.busVMeasPu(busIdx) = v *(1 + vRandDir * fa.erroRatio);
-                    CurrentStatus.busVMeasPu(busIdx) = 1.07+ fa.erroRatio*rand(1);
+                    CurrentStatus.busVMeasPu(busIdx) = v *(1 + vRandDir * fa.erroRatio);
                     % for ql and pl on this bus, bus the same random signal
                     % ratio method as v
                     idxLoad = find(ResultData.allLoadIdx==busIdx);
@@ -241,8 +285,7 @@ elseif Config.falseDataSchema == 2
                         pl = CurrentStatus.ploadMeas(idxLoad) ;
                         CurrentStatus.ploadMeas(idxLoad) = pl * (1 + loadRandDir* fa.erroRatio);
                         ql = CurrentStatus.qloadMeas(idxLoad) ;
-%                         CurrentStatus.qloadMeas(idxLoad) = ql * (1 + loadRandDir * fa.erroRatio);
-                        CurrentStatus.qloadMeas(idxLoad) = 0.0;
+                        CurrentStatus.qloadMeas(idxLoad) = ql * (1 + loadRandDir * fa.erroRatio);
                     end
                     
                     idxLine = find(ResultData.allLineHeadBusIdx == busIdx);
@@ -251,9 +294,6 @@ elseif Config.falseDataSchema == 2
                         CurrentStatus.plineHeadMeas(idxLine) = ph * (1 + loadRandDir* fa.erroRatio);
                         qh = CurrentStatus.qlineHeadMeas(idxLine) ;
                         CurrentStatus.qlineHeadMeas(idxLine) = qh * (1 + loadRandDir * fa.erroRatio);
-                        if CurrentStatus.qlineHeadMeas(idxLine)  > 0
-                            CurrentStatus.qlineHeadMeas(idxLine) = -1*CurrentStatus.qlineHeadMeas(idxLine);
-                        end
                     end
                     
                     idxLine = find(ResultData.allLineTailBusIdx == busIdx);
@@ -262,9 +302,6 @@ elseif Config.falseDataSchema == 2
                         CurrentStatus.plineTailMeas(idxLine) = pt * (1 + loadRandDir* fa.erroRatio);
                         qt = CurrentStatus.qlineTailMeas(idxLine) ;
                         CurrentStatus.qlineTailMeas(idxLine) = qt * (1 + loadRandDir * fa.erroRatio);
-                        if CurrentStatus.qlineTailMeas(idxLine) > 0
-                            CurrentStatus.qlineTailMeas(idxLine) = -1 * CurrentStatus.qlineTailMeas(idxLine);
-                        end
                     end
                     
                     

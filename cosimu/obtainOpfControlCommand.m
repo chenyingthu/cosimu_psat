@@ -1,5 +1,7 @@
 function [ ResultData, isConverged ] = obtainOpfControlCommand( CurrentStatus, ResultData, Config)
 
+isConverged = 0;
+
 %% using latest meas
 CurrentStatus.bus(ResultData.allLoadIdx, 3) = CurrentStatus.ploadMeas * 100;
 CurrentStatus.bus(ResultData.allLoadIdx, 4) = CurrentStatus.qloadMeas * 100;
@@ -35,12 +37,13 @@ end
         
 % %% run state estimation
 % % flat start
+se_success = 1;
 if Config.seEnable == 1
     [baseMVA, bus, gen, branch, se_success] = stateEstimate(ResultData, CurrentStatus2);
     if se_success == 1
-        CurrentStatus.bus = bus;
-        CurrentStatus.branch = branch;
-        CurrentStatus.gen = gen;
+        CurrentStatus2.bus = bus;
+        CurrentStatus2.branch = branch;
+        CurrentStatus2.gen = gen;
     else
         disp(['t = ', num2str(ResultData.t(end)),' >>>>>>>>>>>>>>>> se failed']);
     end
@@ -48,20 +51,22 @@ end
 
 
 %% run opf
-optresult = runopf(CurrentStatus2, Config.opt);
-
-%% set opf result back to opendss as control set point
-if optresult.success == 1
-    ResultData.pLForCtrlHis = [ResultData.pLForCtrlHis, CurrentStatus.ploadMeas];
-    ResultData.qLForCtrlHis = [ResultData.qLForCtrlHis, CurrentStatus.qloadMeas];
-    ResultData.pGenCtrlHis = [ResultData.pGenCtrlHis, optresult.gen(:, 2)/100];
-    ResultData.qGenCtrlHis = [ResultData.qGenCtrlHis, optresult.gen(:, 3)/100];
-    ResultData.vGenCtrlHis = [ResultData.vGenCtrlHis, optresult.gen(:, 6)];
-    ResultData.tCtrlHis = [ResultData.tCtrlHis, ResultData.t(end)];
-else
-    disp(['t = ', num2str(ResultData.t(end)),' >>>>>>>>>>>>>>>> opf failed']);
+if se_success == 1
+    optresult = runopf(CurrentStatus2, Config.opt);
+    %% set opf result back to opendss as control set point
+    if optresult.success == 1
+        ResultData.pLForCtrlHis = [ResultData.pLForCtrlHis, CurrentStatus.ploadMeas];
+        ResultData.qLForCtrlHis = [ResultData.qLForCtrlHis, CurrentStatus.qloadMeas];
+        ResultData.pGenCtrlHis = [ResultData.pGenCtrlHis, optresult.gen(:, 2)/100];
+        ResultData.qGenCtrlHis = [ResultData.qGenCtrlHis, optresult.gen(:, 3)/100];
+        ResultData.vGenCtrlHis = [ResultData.vGenCtrlHis, optresult.gen(:, 6)];
+        ResultData.tCtrlHis = [ResultData.tCtrlHis, ResultData.t(end)];
+    else
+        disp(['t = ', num2str(ResultData.t(end)),' >>>>>>>>>>>>>>>> opf failed']);
+    end
+    isConverged = optresult.success;
 end
-isConverged = optresult.success;
+
 
 end
 
