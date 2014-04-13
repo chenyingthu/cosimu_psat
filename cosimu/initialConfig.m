@@ -5,7 +5,7 @@ Config.verbose = 0;
 Config.simuType = 0; % 0 for pf based , 1 for transient based
 
 % Config.simuTime = 60*60/0.05;
-Config.simuEndTime = 6*3600;
+Config.simuEndTime = 6*100;
 Config.basedir = [pwd, '\'];
 Config.debugdir = [pwd, '\debug\'];
 Config.caseFileDir = [pwd, '\psat\tests'];
@@ -31,6 +31,7 @@ Config.seEnable = 1;
 %% for communications and controls
 Config.measLagSchema = 1; %1 for perfect comm with no latency; 2 for same latency for all tunnels; 3 for dif. latency for dif. tunnels;
 Config.measAllLatency = 5; % for latency of Config.measAllLatency*Config.DSSStepsize 
+Config.measLatencyChagePeriod = [0, Config.simuEndTime]; 
 Config.measLaggedTunnel = 1 : 1 : 30;
 Config.measTunnelLatency = zeros(size(Config.measLaggedTunnel));
 Config.ctrlLagSchema = 1; %1 for perfect comm with no latency; 2 for same latency for all tunnels; 3 for dif. latency for dif. tunnels;

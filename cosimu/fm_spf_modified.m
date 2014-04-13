@@ -42,6 +42,9 @@ if ~Settings.init
   if Settings.show, fm_disp('Writing file "fm_call" ...',1), end
 %   fm_wcall;
   Settings.init = 1;
+else
+    PV = setup(PV);
+    SW = setup(SW);
 end
 
 fm_dynlf; % indicization of components used in power flow computations
