@@ -1,3 +1,4 @@
+function ResultData = CoSimuTest
 %1. to run opendss in matlab;
 %2. to simulate the voltage control with only local control strategies
 clear ;
@@ -36,3 +37,4 @@ cd(pwdpath);
 resultFile = [pwdpath, '/debug/',caseName,'_', startTime];
 save(resultFile, 'Config', 'ResultData');
 
+ResultData = [1:10];

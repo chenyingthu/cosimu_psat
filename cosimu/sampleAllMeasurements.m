@@ -68,7 +68,7 @@ elseif Config.measLagSchema == 3
         
         iGen = find(ResultData.allGenBusIdx == iBus);
         if ~isempty(iGen)
-            iGen2 = ResultData.allGenIdx(iGen)
+            iGen2 = ResultData.allGenIdx(iGen);
             CurrentStatus.genPMeas(iGen2) = ResultData.allPGenHis(iGen, iSnapshot);
             CurrentStatus.genQMeas(iGen2) = ResultData.allQGenHis(iGen, iSnapshot);
         end
@@ -77,6 +77,59 @@ elseif Config.measLagSchema == 3
         if ~isempty(iLoad)
             CurrentStatus.ploadMeas(iLoad) = ResultData.allPLoadHis(iLoad, iSnapshot);
             CurrentStatus.qloadMeas(iLoad) = ResultData.allQLoadHis(iLoad, iSnapshot);
+        end
+    end
+elseif Config.measLagSchema == 4
+    currentT = ResultData.t(end);
+    stuckPoint = Config.measLatencyChagePeriod(1)/Config.sampleRate + 1;
+    % all tunnel use same latency setting
+    iSnapshot = length(ResultData.t) - Config.measAllLatency;
+    if iSnapshot < 1
+        iSnapshot = 1;
+    end
+    CurrentStatus.ploadMeas = ResultData.allPLoadHis(:, iSnapshot);
+    CurrentStatus.qloadMeas = ResultData.allQLoadHis(:, iSnapshot);
+    CurrentStatus.genPMeas = ResultData.allPGenHis(:, iSnapshot);
+    CurrentStatus.genQMeas = ResultData.allQGenHis(:, iSnapshot);
+    CurrentStatus.busVMeasPu = ResultData.allBusVHis(:, iSnapshot);
+    CurrentStatus.plineHeadMeas = ResultData.allLineHeadPHis(:, iSnapshot);
+    CurrentStatus.qlineHeadMeas = ResultData.allLineHeadQHis(:, iSnapshot);
+    CurrentStatus.plineTailMeas = ResultData.allLineTailPHis(:, iSnapshot);
+    CurrentStatus.qlineTailMeas = ResultData.allLineTailQHis(:, iSnapshot);
+
+    
+    %special tunnel sepcial lag
+
+    if currentT >= Config.measLatencyChagePeriod(1) && currentT <= Config.measLatencyChagePeriod(2)
+        
+        for iTun = 1 : length(Config.measLaggedTunnel)
+            iBus = Config.measLaggedTunnel(iTun);
+            iSnapshot = round(length(ResultData.t) - Config.measTunnelLatency(iTun));
+            if iSnapshot < 1
+                iSnapshot = stuckPoint;
+            end
+            CurrentStatus.busVMeasPu(iBus) = ResultData.allBusVHis(iBus, iSnapshot);
+
+            iLine = find(ResultData.allLineHeadBusIdx == iBus);
+            CurrentStatus.plineHeadMeas(iLine) = ResultData.allLineHeadPHis(iLine, iSnapshot);
+            CurrentStatus.qlineHeadMeas(iLine) = ResultData.allLineHeadQHis(iLine, iSnapshot);
+
+            iLine = find(ResultData.allLineTailBusIdx == iBus);
+            CurrentStatus.plineTailMeas(iLine) = ResultData.allLineTailPHis(iLine, iSnapshot);
+            CurrentStatus.qlineTailMeas(iLine) = ResultData.allLineTailQHis(iLine, iSnapshot);
+
+            iGen = find(ResultData.allGenBusIdx == iBus);
+            if ~isempty(iGen)
+                iGen2 = ResultData.allGenIdx(iGen);
+                CurrentStatus.genPMeas(iGen2) = ResultData.allPGenHis(iGen, iSnapshot);
+                CurrentStatus.genQMeas(iGen2) = ResultData.allQGenHis(iGen, iSnapshot);
+            end
+
+            iLoad = find(ResultData.allLoadBusIdx == iBus);
+            if ~isempty(iLoad)
+                CurrentStatus.ploadMeas(iLoad) = ResultData.allPLoadHis(iLoad, iSnapshot);
+                CurrentStatus.qloadMeas(iLoad) = ResultData.allQLoadHis(iLoad, iSnapshot);
+            end
         end
     end
 end
@@ -230,7 +283,7 @@ elseif Config.falseDataSchema == 2
                     
                 case 4 % fix rate change of load
                     vRandDir = 1;
-                    loadRandDir = -1;
+                    loadRandDir = 1;
                     v = CurrentStatus.busVMeasPu(busIdx);
 %                     CurrentStatus.busVMeasPu(busIdx) = v *(1 + vRandDir * fa.erroRatio);
                     CurrentStatus.busVMeasPu(busIdx) = 1.07+ fa.erroRatio*rand(1);

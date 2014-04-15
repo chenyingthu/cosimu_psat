@@ -69,6 +69,6 @@ for i = 1 : r
 end
 disp(['end multiRunSim for test ======================']);
 
-diary(off);
+diary off;
 
 end
